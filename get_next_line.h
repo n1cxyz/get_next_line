@@ -6,7 +6,7 @@
 /*   By: dominicasal <dominicasal@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:17:59 by dasal             #+#    #+#             */
-/*   Updated: 2024/05/11 01:18:52 by dominicasal      ###   ########.fr       */
+/*   Updated: 2024/05/11 16:48:44 by dominicasal      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@
 #include <stdlib.h>
 #include <limits.h>
 
-char	*get_next_line(int fd);
-char	*ft_strxjoin(char *s1, char const *s2);
-ssize_t	ft_strlen(char const *str);
-ssize_t	ft_find_char(char *str, char c);
-char	*str_snip(char *str, ssize_t index);
-char	*ft_substring(char *str, ssize_t index);
+char		*get_next_line(int fd);
+char		*ft_substring(char *str);
+char		*ft_strchr(char const *str, int c);
+char		*ft_get_stash(char *stash, int fd);
+char		*ft_strxjoin(char *line, char *buff);
+ssize_t		ft_strlen(char const *str);
+char		*str_snip(char *str);
+size_t		ft_strlcpy(char *dest, char *src, size_t size);
 
 #endif

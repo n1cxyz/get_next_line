@@ -6,34 +6,80 @@
 /*   By: dominicasal <dominicasal@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:18:06 by dasal             #+#    #+#             */
-/*   Updated: 2024/05/11 01:24:49 by dominicasal      ###   ########.fr       */
+/*   Updated: 2024/05/11 17:14:19 by dominicasal      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strxjoin(char *s1, char const *s2)
+char	*ft_get_stash(char *stash, int fd)
 {
-	ssize_t	s1_len;
+	char	*buffer;
+	ssize_t	bytes_read;
+
+	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	bytes_read = 1;
+	while (!ft_strchr(stash, '\n') && bytes_read != 0)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read == -1)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		buffer[bytes_read] = '\0';
+		stash = ft_strxjoin(stash, buffer);
+	}
+	free (buffer);
+	return (stash);
+}
+
+char	*ft_strchr(char const *str, int c)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (NULL);
+	while (str[i] != '\0')
+	{
+		if (str[i] == (char)c)
+			return ((char *)str + i);
+		i++;
+	}
+	if (str[i] == (char)c)
+		return ((char *)str + i);
+	return (NULL);
+}
+
+char	*ft_strxjoin(char *s1, char *s2)
+{
+	size_t	buffer_len;
+	size_t	content_len;
 	char	*result;
 	char	*result_ptr;
-	char	*cpy;
+	char	*src;
 
-	s1_len = 0;
+	buffer_len = 0;
+	if (!s1 && !s2)
+		return (NULL);
 	if (s1)
-		s1_len = ft_strlen(s1);
-	result = (char *)malloc(sizeof(char) * (s1_len + ft_strlen(s2) + 1));
+		buffer_len = ft_strlen(s1);
+	content_len = ft_strlen(s2);
+	result = (char *)malloc(sizeof(char) * (buffer_len + content_len + 1));
 	if (!result)
 		return (NULL);
 	result_ptr = result;
-	cpy = s1;
-	while (cpy && *cpy)
-		*result_ptr++ = *cpy++;
-	cpy = (char *)s2;
-	while (cpy && *cpy)
-		*result_ptr++ = *cpy++;
-	free (s1);
+	src = s1;
+	while (src && *src)
+		*result_ptr++ = *src++;
+	src = (char *)s2;
+	while (src && *src)
+		*result_ptr++ = *src++;
 	*result_ptr = '\0';
+	free(s1);
 	return (result);
 }
 
@@ -47,67 +93,73 @@ ssize_t	ft_strlen(char const *str)
 	return (i);
 }
 
-ssize_t	ft_find_char(char *str, char c)
+char	*str_snip(char *str)
 {
-	ssize_t	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == c)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-char	*str_snip(char *str, ssize_t index)
-{
-	ssize_t		i;
+	size_t	i;
 	char	*result;
+	size_t	len;
 
-	i = 0;
-	if ((!str) || index > ft_strlen(str)|| index < 0)
+	len = 0;
+	if (!str[len])
 		return (NULL);
-	while (str[i] != '\0')
-	{
-		if (i == index)
-			break ;
-		i++;
-	}
-	result = (char *)malloc(sizeof(char) * i + 1);
+	while (str[len] && str[len] != '\n')
+		len++;
+	result = (char *)malloc(sizeof(char) * len + 2);
 	if (!result)
 		return (NULL);
 	i = 0;
-	while (i <= index)
+	while (str[i] && str[i] != '\n')
 	{
 		result[i] = str[i];
 		i++; 
+	}
+	if (str[i] == '\n')
+	{
+		result[i] = str[i];
+		i++;
 	}
 	result[i] = '\0';
 	return (result);
 }
 
-char	*ft_substring(char *str, ssize_t index)
+char	*ft_substring(char *str)
 {
-	int		len;
+	ssize_t  i;
 	char	*result;
 
-    if (!str)
+	i = 0;
+	while (str[i] != '\0' && str[i] != '\n')
+		i++;
+	if (!str[i])	
+	{
+		free (str);
 		return (NULL);
-	len = ft_strlen(str) - index;
-	result = malloc(sizeof(char) * len + 1);
+	}
+	result = (char *)malloc(sizeof(char) * (ft_strlen(str) - i + 1));
 	if (!result)
 		return (NULL);
-	len = 0;
-	index++;
-	while (str[index] != '\0')
-	{
-		result[len] = str[index];
-		len++;
-		index++;
-	}
-	result[len] = '\0';
+    i++;
+	ft_strlcpy(result, str + i, ft_strlen(str) - i + 1);
 	free (str);
 	return (result);
+}
+
+size_t	ft_strlcpy(char *dest, char *src, size_t size)
+{
+	size_t	i;
+	size_t	j;
+
+	j = 0;
+	i = 0;
+	while (src[i] != '\0')
+		i++;
+	if (size == 0)
+		return (i);
+	while (src[j] != '\0' && j < size - 1)
+	{
+		dest[j] = src[j];
+		j++;
+	}
+	dest[j] = '\0';
+	return (i);
 }
