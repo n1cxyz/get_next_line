@@ -29,17 +29,25 @@ char	*get_next_line(int fd)
 /* 
 int	main(void)
 {
-	ssize_t		fd;
+	ssize_t		fd[3];
 	char	*result;
 
-	fd = open("text.txt", O_RDONLY);
+	fd[0] = open("text1.txt", O_RDONLY);
+	fd[1] = open("text2.txt", O_RDONLY);
+	fd[2] = open("text3.txt", O_RDONLY);
 
-	while ((result = get_next_line(fd)) != NULL)
+	while ((result = get_next_line(fd[0])) != NULL)
 	{
+		printf("%s", result);
+		result = get_next_line(fd[1]);
+		printf("%s", result);
+		result = get_next_line(fd[2]);
 		printf("%s", result);
 		free (result);
 	}
 
-	close(fd);
+	close(fd[0]);
+	close(fd[1]);
+	close(fd[2]);
 	return (0);
 }  */
