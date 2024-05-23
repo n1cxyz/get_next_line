@@ -14,15 +14,15 @@
 # define GET_NEXT_LINE_H
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
-#endif
+# endif
 # ifndef MAX_FD
 #  define MAX_FD 3
-#endif
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
+# endif
+# include <fcntl.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <limits.h>
 
 char		*get_next_line(int fd);
 char		*ft_substring(char *str);

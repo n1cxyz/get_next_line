@@ -12,30 +12,6 @@
 
 #include "get_next_line.h"
 
-char	*ft_get_stash(char *stash, int fd)
-{
-	char	*buffer;
-	ssize_t	bytes_read;
-
-	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
-	bytes_read = 1;
-	while (!ft_strchr(stash, '\n') && bytes_read != 0)
-	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		buffer[bytes_read] = '\0';
-		stash = ft_strxjoin(stash, buffer);
-	}
-	free (buffer);
-	return (stash);
-}
-
 char	*ft_strchr(char const *str, int c)
 {
 	int	i;
@@ -93,44 +69,15 @@ ssize_t	ft_strlen(char const *str)
 	return (i);
 }
 
-char	*str_snip(char *str)
-{
-	size_t	i;
-	char	*result;
-	size_t	len;
-
-	len = 0;
-	if (!str[len])
-		return (NULL);
-	while (str[len] && str[len] != '\n')
-		len++;
-	result = (char *)malloc(sizeof(char) * len + 2);
-	if (!result)
-		return (NULL);
-	i = 0;
-	while (str[i] && str[i] != '\n')
-	{
-		result[i] = str[i];
-		i++; 
-	}
-	if (str[i] == '\n')
-	{
-		result[i] = str[i];
-		i++;
-	}
-	result[i] = '\0';
-	return (result);
-}
-
 char	*ft_substring(char *str)
 {
-	ssize_t  i;
+	ssize_t	i;
 	char	*result;
 
 	i = 0;
 	while (str[i] != '\0' && str[i] != '\n')
 		i++;
-	if (!str[i])	
+	if (!str[i])
 	{
 		free (str);
 		return (NULL);
@@ -138,7 +85,7 @@ char	*ft_substring(char *str)
 	result = (char *)malloc(sizeof(char) * (ft_strlen(str) - i + 1));
 	if (!result)
 		return (NULL);
-    i++;
+	i++;
 	ft_strlcpy(result, str + i, ft_strlen(str) - i + 1);
 	free (str);
 	return (result);
